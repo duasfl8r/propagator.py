@@ -1,8 +1,39 @@
 # -*- encoding: utf-8 -*-
+"""
+A propagator network.
+
+Classes defined in this module:
+
+- `Cell`
+- `Propagator`
+
+This module uses `art.scheduler`, a `art.Scheduler` object that manages
+the propagator alerts.
+"""
+
 from art import scheduler
 from art.logging import debug, warn, error, info
 
+"""
+The storage unit of the propagator network.
+
+Each cell may have content, stored in the `content` attribute -- that is
+`None` if there is no content.
+
+Each cell may have neighbors, stored in the `neighbors` attribute. It is
+a list of propagators that are interested in the cell's content.
+
+When the cell receives content, it alerts all neighbor propagators, so
+they can update other cells based on this new content.
+"""
 class Cell:
+    """
+    Initialize a `Cell` object, with no neighbors.
+
+    Parameters:
+
+    - `content`: is provided, it is added as the cell's content.
+    """
     def __init__(self, content=None):
         debug("New cell: {0}".format(id(self)))
         self.neighbors = []
@@ -15,12 +46,31 @@ class Cell:
     def __unicode__(self):
         return self.__str__()
 
+    """
+    Add a propagator to the cell's neighbors, and alert it using the scheduler.
+
+    The propagator is added only if it isn't already a neighbor.
+    """
     def new_neighbor(self, n):
         if n not in self.neighbors:
             debug("{0} gets a new neighbor: {1}".format(self, n))
             self.neighbors.append(n)
             scheduler.alert_propagators(n)
 
+    """
+    Add content to the cell and alert its neighbors if the cell is empty.
+
+    If the content to be added is `None` or is equal to the cell's
+    content, nothing is done.
+
+    If there is content in the cell, and it differs from the parameter's
+    content, there is inconsistency in the system; it raises a
+    `ValueError`.
+
+    Parameters:
+
+    - `c`: the content to be added.
+    """
     def add_content(self, c):
         debug("Adding content {1} to {0}".format(self, c))
         if c != None:
@@ -33,7 +83,27 @@ class Cell:
         else:
             debug("There's no content!")
 
+"""
+The machine of the propagator network.
+
+A `Propagator` is a machine that continously examines its input cells and
+produces outputs when possible (i.e. when the inputs have enough information).
+"""
 class Propagator:
+    """
+    Initialize a `Propagator` object.
+
+    `to_do` is scheduled to be run once by each of the cells in `neighbors`.
+
+    `to_do` is then added as a neighbor to each of them, so it will run
+    again every time one of the cells have its content changed.
+
+    Parameters:
+
+    - `neighbors`: cells that affect this propagator.
+    - `to_do`: a function that creates some output based on `neighbors`'
+      contents.
+    """
     def __init__(self, neighbors, to_do):
         debug("New propagator: {to_do} ({id})".format(id=id(self), to_do=to_do))
         for n in neighbors:
@@ -46,6 +116,15 @@ class Propagator:
     def __unicode__(self):
         return self.__str__()
 
+    """
+    Returns a `Propagator` object that constructs its body on demand.
+
+    Parameters:
+
+    - `neighbors`: the propagator's neighbor cells.
+    - `to_build`: a function that will be run only if there is at least
+      one neighbor with content which is not `None`.
+    """
     @classmethod
     def compound(cls, neighbors, to_build):
         done = False

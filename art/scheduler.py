@@ -9,16 +9,7 @@ Classes defined in this module:
 
 from contextlib import contextmanager
 from art.logging import debug, warn, error, info
-from art.util import SetQueue
-
-"""
-Returns `value` it it is a list, `[value]` otherwise.
-"""
-def listify(value):
-    if isinstance(value, list):
-        return value
-    else:
-        return [value]
+from art.util import SetQueue, listify
 
 """
 A scheduler that stores propagators in a queue ("alerts" them) and runs

@@ -1,6 +1,15 @@
 from collections import deque
 
 """
+Returns `value` it it is a list, or a list containing it otherwise.
+"""
+def listify(value):
+    if isinstance(value, list):
+        return value
+    else:
+        return [value]
+
+"""
 Build a queue of unique elements.
 """
 class SetQueue(set):

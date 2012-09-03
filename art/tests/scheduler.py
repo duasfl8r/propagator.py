@@ -10,7 +10,7 @@ class TestCaseWithScheduler(unittest.TestCase):
 
 class SchedulerTestCase(TestCaseWithScheduler):
     def test_new_scheduler_has_no_alerted_propagators(self):
-        self.assertFalse(scheduler.any_propagators_alerted)
+        self.assertEqual(len(scheduler.alerted_propagators), 0)
         self.assertEqual(len(scheduler.propagators_ever_alerted), 0)
 
 

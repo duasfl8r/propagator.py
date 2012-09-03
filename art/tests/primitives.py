@@ -122,8 +122,8 @@ class AbsoluteValueTestCase(TestCaseWithScheduler):
 
 class LessThanTestCase(TestCaseWithScheduler):
     def test_integer_true(self):
-        a = Cell(13)
-        b = Cell(15)
+        a = Cell(content=13)
+        b = Cell(content=15)
         c = Cell()
 
         less_than(a, b, c)
@@ -133,8 +133,8 @@ class LessThanTestCase(TestCaseWithScheduler):
         self.assertEqual(c.content, True)
 
     def test_integer_false(self):
-        a = Cell(17)
-        b = Cell(15)
+        a = Cell(content=17)
+        b = Cell(content=15)
         c = Cell()
 
         less_than(a, b, c)
@@ -146,8 +146,8 @@ class LessThanTestCase(TestCaseWithScheduler):
 
 class GreaterThanTestCase(TestCaseWithScheduler):
     def test_integer_true(self):
-        a = Cell(17)
-        b = Cell(15)
+        a = Cell(content=17)
+        b = Cell(content=15)
         c = Cell()
 
         greater_than(a, b, c)
@@ -157,8 +157,8 @@ class GreaterThanTestCase(TestCaseWithScheduler):
         self.assertEqual(c.content, True)
 
     def test_integer_false(self):
-        a = Cell(13)
-        b = Cell(15)
+        a = Cell(content=13)
+        b = Cell(content=15)
         c = Cell()
 
         greater_than(a, b, c)
@@ -170,7 +170,7 @@ class GreaterThanTestCase(TestCaseWithScheduler):
 
 class InverterTestCase(TestCaseWithScheduler):
     def test_true_to_false(self):
-        a = Cell(True)
+        a = Cell(content=True)
         b = Cell()
 
         inverter(a, b)
@@ -180,7 +180,7 @@ class InverterTestCase(TestCaseWithScheduler):
         self.assertEqual(b.content, False)
 
     def test_false_to_true(self):
-        a = Cell(False)
+        a = Cell(content=False)
         b = Cell()
 
         inverter(a, b)
@@ -203,8 +203,8 @@ class ConstantTestCase(TestCaseWithScheduler):
 
 class SwitchTestCase(TestCaseWithScheduler):
     def test_true(self):
-        a = Cell(True)
-        b = Cell('yes')
+        a = Cell(content=True)
+        b = Cell(content='yes')
         c = Cell()
 
         switch(a, b, c)
@@ -214,8 +214,8 @@ class SwitchTestCase(TestCaseWithScheduler):
         self.assertEqual(c.content, 'yes')
 
     def test_false(self):
-        a = Cell(False)
-        b = Cell('yes')
+        a = Cell(content=False)
+        b = Cell(content='yes')
         c = Cell()
 
         switch(a, b, c)

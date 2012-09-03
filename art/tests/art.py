@@ -15,7 +15,7 @@ class CellTestCase(TestCaseWithScheduler):
         self.assertEqual(a.content, None)
 
     def test_new_cell_with_content(self):
-        a = Cell('hello')
+        a = Cell(content='hello')
         b = Cell()
         b.add_content('hello')
         self.assertEqual(a.content, 'hello')
@@ -32,34 +32,31 @@ class CellTestCase(TestCaseWithScheduler):
         self.assertEqual(a.content, 'hello')
 
     def test_add_new_content_to_filled_cell_raises(self):
-        a = Cell('hello')
+        a = Cell(content='hello')
         self.assertRaises(ValueError, a.add_content, 'world')
 
     def test_add_same_content_to_filled_cell(self):
-        a = Cell('hello')
+        a = Cell(content='hello')
         a.add_content('hello')
         self.assertEqual(a.content, 'hello')
 
     def test_new_cell_has_no_neighbors(self):
-        a = Cell('hello')
+        a = Cell(content='hello')
         self.assertEqual(a.neighbors, [])
 
     def test_new_cell_with_neighbors(self):
         f = lambda x: x
 
-        a = Cell('hello')
-        b = Cell('howdy', [f])
+        a = Cell(content='hello')
         a.new_neighbor(f)
-
         self.assertEqual(a.neighbors, [f])
-        self.assertEqual(b.neighbors, [f])
 
     def test_add_existing_neighbor(self):
         f = lambda x: x
 
-        a = Cell('hello', [f])
+        a = Cell(content='hello')
         a.new_neighbor(f)
-
+        a.new_neighbor(f)
         self.assertEqual(len(a.neighbors), 1)
 
 

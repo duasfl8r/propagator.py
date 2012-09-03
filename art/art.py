@@ -128,10 +128,17 @@ class Propagator:
     @classmethod
     def compound(cls, neighbors, to_build):
         done = False
+
+        def all_none(iterable):
+            for item in iterable:
+                if item is not None:
+                    return False
+            return True
+
         def test():
             nonlocal done
             if not done:
-                if filter(lambda x: x is None, [c.content for c in neighbors]):
+                if not all_none(n.content for n in neighbors):
                     done = True
                     to_build()
         return Propagator(neighbors, test)

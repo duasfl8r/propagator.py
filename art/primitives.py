@@ -17,11 +17,11 @@ Takes a function `f` and returns a function wrapper that applies `f`
 to its arguments if all of them are not `None`; returns `None` otherwise.
 """
 def lift_to_cell_contents(f):
-    def helper(*args):
+    def lift_helper(*args):
         if None in args:
             return None
         return f(*args)
-    return helper
+    return lift_helper
 
 """
 Returns a factory of propagators that apply a lifted version of function
@@ -35,7 +35,7 @@ will return `None` if any of its arguments is `None`.
 """
 def make_primitive(f):
 
-    def helper(*cells):
+    def make_primitive_helper(*cells):
         inputs, output = cells[:-1], cells[-1]
         lifted_f = lift_to_cell_contents(f)
 
@@ -44,7 +44,7 @@ def make_primitive(f):
 
         return Propagator(inputs, to_do)
 
-    return helper
+    return make_primitive_helper
 
 """
 A factory of propagators that add inputs to an output.

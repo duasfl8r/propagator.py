@@ -1,6 +1,16 @@
 from collections import deque
 
 """
+Returns `True` if all elements on `iterable` are `None`, and `False`
+otherwise.
+"""
+def all_none(iterable):
+    for item in iterable:
+        if item is not None:
+            return False
+    return True
+
+"""
 Returns `value` it it is a list, or a list containing it otherwise.
 """
 def listify(value):

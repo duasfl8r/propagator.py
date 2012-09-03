@@ -12,6 +12,7 @@ the propagator alerts.
 """
 
 from art import scheduler
+from art.util import all_none
 from art.logging import debug, warn, error, info
 
 """
@@ -129,16 +130,11 @@ class Propagator:
     def compound(cls, neighbors, to_build):
         done = False
 
-        def all_none(iterable):
-            for item in iterable:
-                if item is not None:
-                    return False
-            return True
-
-        def test():
+        def compound_helper():
             nonlocal done
             if not done:
                 if not all_none(n.content for n in neighbors):
                     done = True
                     to_build()
-        return Propagator(neighbors, test)
+
+        return Propagator(neighbors, compound_helper)

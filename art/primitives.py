@@ -111,18 +111,22 @@ def constant(value):
     return make_primitive(lambda: value)
 
 """
-A factory of propagators that make its output `predicate` if `if_true`
-is true, and `None` otherwise.
+A factory of propagators that make its output `if_true` if `predicate`
+is true, and `if_false` otherwise.
+"""
+def conditional(p, if_true, if_false, output):
+    def conditional_helper():
+        if p.content is not None:
+            if p.content:
+                output.add_content(if_true.content)
+            else:
+                output.add_content(if_false.content)
+
+    return Propagator([p, if_true, if_false], conditional_helper)
+
+"""
+A factory of propagators that make its output `if_true` if `predicate`
+is true.
 """
 def switch(predicate, if_true, output):
-    def conditional(p, if_true, if_false, output):
-        def helper():
-            if p.content is not None:
-                if p.content:
-                    output.add_content(if_true.content)
-                else:
-                    output.add_content(if_false.content)
-
-        return Propagator([p, if_true, if_false], helper)
-
     return conditional(predicate, if_true, Cell('_'), output)

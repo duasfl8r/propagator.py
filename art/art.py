@@ -34,14 +34,18 @@ class Cell:
 
     - `content`: is provided, it is added as the cell's content.
     """
-    def __init__(self, content=None):
-        debug("New cell: {0}".format(id(self)))
+    def __init__(self, name=None, content=None):
         self.neighbors = []
+        self.name = name
         self.content = None
         self.add_content(content)
+        debug("New cell: " + str(self))
 
     def __str__(self):
-        return "<Cell: {content} ({id})>".format(id=id(self), **vars(self))
+        if self.name:
+            return "<Cell:  {name} [{content}] ({id})>".format(id=id(self), **vars(self))
+        else:
+            return "<Cell: [{content}] ({id})>".format(id=id(self), **vars(self))
 
     def __unicode__(self):
         return self.__str__()
@@ -53,7 +57,6 @@ class Cell:
     """
     def new_neighbor(self, n):
         if n not in self.neighbors:
-            debug("{0} gets a new neighbor: {1}".format(self, n))
             self.neighbors.append(n)
             scheduler.alert_propagators(n)
 
@@ -72,16 +75,14 @@ class Cell:
     - `c`: the content to be added.
     """
     def add_content(self, c):
-        debug("Adding content {1} to {0}".format(self, c))
         if c != None:
             if self.content == None:
+                debug("Adding content {1} to {0}".format(self, c))
                 self.content = c
                 scheduler.alert_propagators(self.neighbors)
             else:
                 if self.content != c:
                     raise ValueError("Ack! Inconsistency!")
-        else:
-            debug("There's no content!")
 
 """
 The machine of the propagator network.
@@ -105,7 +106,6 @@ class Propagator:
       contents.
     """
     def __init__(self, neighbors, to_do):
-        debug("New propagator: {to_do} ({id})".format(id=id(self), to_do=to_do))
         for n in neighbors:
             n.new_neighbor(to_do)
         scheduler.alert_propagators(to_do)

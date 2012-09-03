@@ -34,15 +34,12 @@ It "lifts" `f` by wrapping it with `lift_to_cell_contents`, so that it
 will return `None` if any of its arguments is `None`.
 """
 def make_primitive(f):
-    debug("Creating primitive from function {0}".format(f))
 
     def helper(*cells):
         inputs, output = cells[:-1], cells[-1]
         lifted_f = lift_to_cell_contents(f)
 
         def to_do():
-            debug("Applying lifted {f} to {inputs}".format(f=f, inputs=", ".join(map(str, inputs))))
-            debug("")
             output.add_content(lifted_f(*[c.content for c in inputs]))
 
         return Propagator(inputs, to_do)
@@ -128,4 +125,4 @@ def switch(predicate, if_true, output):
 
         return Propagator([p, if_true, if_false], helper)
 
-    return conditional(predicate, if_true, Cell(), output)
+    return conditional(predicate, if_true, Cell('_'), output)

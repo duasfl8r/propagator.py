@@ -27,7 +27,7 @@ LOGGING = {
         },
 
         "long": {
-            "format": "%(asctime)s\t%(filename)s:%(lineno)s %(name)s\t%(levelname)s\t%(message)s"
+            "format": "%(filename)s:%(lineno)s\t%(message)s"
         }
     }
 }

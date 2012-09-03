@@ -6,22 +6,14 @@ from art.logging import debug, warn, error, info
 
 def heron_step(x, g, h):
     def helper():
-        debug("x_over_g cell")
-        x_over_g = Cell()
-        debug("g_plus_x_over_g cell")
-        g_plus_x_over_g = Cell()
-        debug("two cell")
-        two = Cell()
+        x_over_g = Cell('x/g')
+        g_plus_x_over_g = Cell('g+x/g')
+        two = Cell('two')
 
-        debug("divider function")
         divider(x, g, x_over_g)
-        debug("adder function")
         adder(g, x_over_g, g_plus_x_over_g)
-        debug("(constant(2)) function")
         (constant(2))(two)
-        debug("divider function")
         divider(g_plus_x_over_g, two, h)
-
     return Propagator.compound([x, g], helper)
 
 if __name__ == "__main__":

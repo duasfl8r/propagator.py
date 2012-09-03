@@ -42,7 +42,6 @@ class Scheduler:
       `Propagators objects.
     """
     def alert_propagators(self, propagators):
-        debug("Alerting propagators: {0}".format(propagators))
         for p in listify(propagators):
             assert callable(p), "Alerting a non-procedure"
             self.propagators_ever_alerted.add(p)

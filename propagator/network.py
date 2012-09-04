@@ -7,8 +7,8 @@ Classes defined in this module:
 - `Cell`
 - `Propagator`
 
-This module uses `art.scheduler`, a `art.Scheduler` object that manages
-the propagator alerts.
+This module uses `propagator.scheduler`, a `Scheduler` object
+that manages the propagator alerts.
 """
 
 from propagator import scheduler

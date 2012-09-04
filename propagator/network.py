@@ -11,9 +11,9 @@ This module uses `art.scheduler`, a `art.Scheduler` object that manages
 the propagator alerts.
 """
 
-from art import scheduler
-from art.util import all_none
-from art.logging import debug, warn, error, info
+from propagator import scheduler
+from propagator.util import all_none
+from propagator.logging import debug, warn, error, info
 
 """
 The storage unit of the propagator network.

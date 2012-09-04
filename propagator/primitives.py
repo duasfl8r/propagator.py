@@ -8,9 +8,9 @@ that calculates this relationship when the cells have enough content.
 
 import operator
 
-from art import scheduler
-from art.art import Propagator, Cell
-from art.logging import debug, warn, error, info
+from propagator import scheduler
+from propagator.network import Propagator, Cell
+from propagator.logging import debug, warn, error, info
 
 """
 Takes a function `f` and returns a function wrapper that applies `f`

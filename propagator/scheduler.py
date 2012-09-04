@@ -8,8 +8,8 @@ Classes defined in this module:
 """
 
 from contextlib import contextmanager
-from art.logging import debug, warn, error, info
-from art.util import SetQueue, listify
+from propagator.logging import debug, warn, error, info
+from propagator.util import SetQueue, listify
 
 """
 A scheduler that stores propagators in a queue ("alerts" them) and runs

@@ -9,10 +9,10 @@ Each step in this process is called a "Heron step"; this step calculates a "bett
     ``h = (g + (x / g)) / 2``
 """
 
-from art import scheduler
-from art.art import Propagator, Cell
-from art.primitives import *
-from art.logging import debug, warn, error, info
+from propagator import scheduler
+from propagator.network import Propagator, Cell
+from propagator.primitives import *
+from propagator.logging import debug, warn, error, info
 
 """
 Creates a propagator network that calculates a better guess as a

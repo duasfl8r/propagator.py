@@ -1,8 +1,8 @@
 import unittest
 
-from art import scheduler
-from art.art import Cell, Propagator
-from art.primitives import *
+from propagator import scheduler
+from propagator.network import Cell, Propagator
+from propagator.primitives import *
 
 class TestCaseWithScheduler(unittest.TestCase):
     def setUp(self):

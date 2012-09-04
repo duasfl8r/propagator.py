@@ -1,5 +1,5 @@
 import logging, logging.config
-from art.config import LOGGING
+from propagator.config import LOGGING
 logging.config.dictConfig(LOGGING)
 
 logger = logging.getLogger("art")

@@ -3,9 +3,9 @@ propagator.py
 
 **propatagor.py** is a *propagator network* built with Python.
 
-It is based on (or, should I say, translated from) the [Art of the Propagator](art),
+It is based on (or, should I say, translated from) the [Art of the Propagator][art],
 a paper written by Alexey Radul and Gerald Sussman. There's a presentation
-by Sussman called [We Really Don't Know How To Compute!](we-really-dont-know)
+by Sussman called [We Really Don't Know How To Compute!][we-really-dont-know]
 in which he explains the concepts and some applications wonderfully.
 
 They wrote a complete propagator network and examples in MIT Scheme. I will

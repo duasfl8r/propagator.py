@@ -69,6 +69,12 @@ Uses true division (as in `/`).
 divider = make_primitive(operator.truediv)
 
 """
+A factory of propagators that make its output the square of
+its input.
+"""
+squarer = make_primitive(lambda x: x*x)
+
+"""
 A factory of propagators that make its output the absolute value of its input.
 """
 absolute_value = make_primitive(operator.abs)

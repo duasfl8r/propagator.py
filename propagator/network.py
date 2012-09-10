@@ -82,8 +82,11 @@ class Cell:
                 self.content = c
                 scheduler.alert_propagators(self.neighbors)
             else:
-                if self.content != c:
-                    raise ValueError("Ack! Inconsistency!")
+                self.merge(c)
+
+    def merge(self, new_content):
+        if self.content != new_content:
+            raise ValueError("Ack! Inconsistency!")
 
 """
 The machine of the propagator network.

@@ -5,7 +5,7 @@ LOGGING = {
                 "class": "logging.FileHandler",
                 "level": "DEBUG",
                 "formatter": "long",
-                "filename": "art.log"
+                "filename": "propagator.log"
                 },
 
             "console": {

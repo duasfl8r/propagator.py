@@ -14,6 +14,7 @@ that manages the propagator alerts.
 from propagator import scheduler
 from propagator.util import all_none
 from propagator.logging import debug, warn, error, info
+from propagator.exceptions import ContradictionError
 
 """
 The storage unit of the propagator network.
@@ -76,17 +77,18 @@ class Cell:
     - `c`: the content to be added.
     """
     def add_content(self, c):
-        if c != None:
-            if self.content == None:
-                debug("Adding content {1} to {0}".format(self, c))
-                self.content = c
-                scheduler.alert_propagators(self.neighbors)
-            else:
-                self.merge(c)
+        answer = self.merge(c)
+
+        if answer != self.content:
+            debug("Adding content {1} to {0}".format(self, answer))
+            self.content = answer
+            scheduler.alert_propagators(self.neighbors)
 
     def merge(self, new_content):
-        if self.content != new_content:
-            raise ValueError("Ack! Inconsistency!")
+        if self.content == None or new_content == self.content:
+            return new_content
+        else:
+            raise ContradictionError("Ack! Inconsistency!")
 
 """
 The machine of the propagator network.

@@ -1,0 +1,2 @@
+class ContradictionError(ValueError):
+    pass

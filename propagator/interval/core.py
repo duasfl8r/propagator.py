@@ -40,10 +40,28 @@ class Interval:
 
 class IntervalCell(Cell):
     def merge(self, new_content):
-        new_range = self.content & new_content
-        if new_range != self.content:
-            if new_range.is_empty():
-                raise ValueError("Ack! Inconsistency!")
-            else:
-                self.content = new_range
-                scheduler.alert_propagators(self.neighbors)
+        inf_interval = Interval(float("-inf"), float("inf"))
+
+        def force_interval(n):
+            number_types = [float, int, complex]
+
+            if isinstance(n, Interval):
+                return n
+
+            if n is None:
+                return inf_interval
+
+            if any(isinstance(n, t) for t in number_types):
+                return Interval(n, n)
+
+            raise ValueError("{n} is not one of these: Interval, number, None".format(**vars()))
+
+        new_range = force_interval(self.content) & force_interval(new_content)
+
+        if new_range.is_empty():
+            raise ContradictionError("Ack! Inconsistency!")
+
+        if new_range == inf_interval:
+            return None
+
+        return new_range

@@ -16,7 +16,7 @@ from propagator.logging import debug, warn, error, info
 Takes a function `f` and returns a function wrapper that applies `f`
 to its arguments if all of them are not `None`; returns `None` otherwise.
 """
-def lift_to_cell_contents(f):
+def _lift_to_cell_contents(f):
     def lift_helper(*args):
         if None in args:
             return None
@@ -30,14 +30,14 @@ Returns a factory of propagators that apply a lifted version of function
 The input cells are defined as the factory's all but last arguments, and
 the output cell as the last one.
 
-It "lifts" `f` by wrapping it with `lift_to_cell_contents`, so that it
+It "lifts" `f` by wrapping it with `_lift_to_cell_contents`, so that it
 will return `None` if any of its arguments is `None`.
 """
 def make_primitive(f):
 
     def make_primitive_helper(*cells):
         inputs, output = cells[:-1], cells[-1]
-        lifted_f = lift_to_cell_contents(f)
+        lifted_f = _lift_to_cell_contents(f)
 
         def to_do():
             output.add_content(lifted_f(*[c.content for c in inputs]))

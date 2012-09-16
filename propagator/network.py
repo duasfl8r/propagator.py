@@ -11,10 +11,19 @@ This module uses `propagator.scheduler`, a `Scheduler` object
 that manages the propagator alerts.
 """
 
+from functools import partial
+from operator import is_, is_not
+
 from propagator import scheduler
+from propagator import make_generic_operator, assign_operation
 from propagator.util import all_none
 from propagator.logging import debug, warn, error, info
 from propagator.exceptions import ContradictionError
+
+Contradiction = ['contradiction']
+
+def is_contradictory(x):
+    return type(x) == list and len(x) and x[0] == 'contradiction'
 
 """
 The storage unit of the propagator network.
@@ -76,23 +85,16 @@ class Cell:
 
     - `c`: the content to be added.
     """
-    def add_content(self, c):
-        answer = self.merge(c)
+    def add_content(self, increment):
+        answer = merge(self.content, increment)
 
         if answer != self.content:
             debug("Adding content {1} to {0}".format(self, answer))
             self.content = answer
             scheduler.alert_propagators(self.neighbors)
 
-    def merge(self, new_content):
-        if self.content == None or new_content == self.content:
-            return new_content
-        else:
-            raise ContradictionError("Ack! Inconsistency!")
-
 """
-The machine of the propagator network.
-
+The machine of the propagator network.  
 A `Propagator` is a machine that continously examines its input cells and
 produces outputs when possible (i.e. when the inputs have enough information).
 """
@@ -143,3 +145,23 @@ class Propagator:
                     to_build()
 
         return Propagator(neighbors, compound_helper)
+
+
+def _default_merge(content, increment):
+    debug("Merging {content} and {increment}...".format(**vars()))
+    if content == increment:
+        return content
+    else:
+        return Contradiction + ['{content} != {increment}'.format(**vars())]
+
+merge = make_generic_operator(2, "merge", _default_merge)
+
+assign_operation("merge",
+    lambda content, increment: content,
+    (partial(is_not, None), partial(is_, None))
+)
+
+assign_operation("merge",
+    lambda content, increment: increment,
+    (partial(is_, None), partial(is_not, None))
+)

@@ -1,7 +1,8 @@
-import math
+from functools import partial
 
 from propagator import scheduler
-from propagator.network import Cell
+from propagator.generic_operator import assign_operation
+from propagator.network import Cell, Contradiction
 
 class Interval:
     def __init__(self, low, high):
@@ -38,30 +39,46 @@ class Interval:
     def is_empty(self):
         return self.low > self.high
 
-class IntervalCell(Cell):
-    def merge(self, new_content):
-        inf_interval = Interval(float("-inf"), float("inf"))
+    def contains(number):
+        return self.high >= number >= self.low
 
-        def force_interval(n):
-            number_types = [float, int, complex]
 
-            if isinstance(n, Interval):
-                return n
-
-            if n is None:
-                return inf_interval
-
-            if any(isinstance(n, t) for t in number_types):
-                return Interval(n, n)
-
-            raise ValueError("{n} is not one of these: Interval, number, None".format(**vars()))
-
-        new_range = force_interval(self.content) & force_interval(new_content)
-
-        if new_range.is_empty():
-            raise ContradictionError("Ack! Inconsistency!")
-
-        if new_range == inf_interval:
-            return None
-
+def _merge_intervals(content, increment):
+    new_range = content & increment
+    if new_range == content:
+        return content
+    elif new_range == increment:
+        return increment
+    elif new_range.is_empty():
+        return Contradiction + ['Empty merge: {content} & {increment} == {new_range}'.format(**vars())]
+    else:
         return new_range
+
+def is_number(thing):
+    return isinstance(thing, (int, float, complex))
+
+def is_interval(thing):
+    return isinstance(thing, Interval)
+
+assign_operation("merge",
+    _merge_intervals,
+    (is_interval, is_interval)
+)
+
+def _ensure_inside(interval, number):
+    if interval.contains(number):
+        return number
+    else:
+        return Contradiction + ['{number} is not inside {interval}'.format(**vars())]
+
+assign_operation("merge",
+    lambda content, increment: _ensure_inside(increment, content),
+    (is_number, is_interval)
+)
+
+assign_operation("merge",
+    lambda content, increment: _ensure_inside(content, increment),
+    (is_interval, is_number)
+)
+
+

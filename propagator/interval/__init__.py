@@ -1,1 +1,1 @@
-from .core import Interval, IntervalCell
+from .core import Interval

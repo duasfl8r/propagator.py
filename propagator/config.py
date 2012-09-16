@@ -15,7 +15,7 @@ LOGGING = {
                 }
             },
     "loggers": {
-        "art": {
+        "propagator": {
             "handlers":["console", "file"],
             "level": "DEBUG",
             }

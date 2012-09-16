@@ -1,4 +1,23 @@
-from collections import deque
+"""
+Support for generic operatiors.
+
+This module contains functions to make generic operators and to assign a
+function to this operator if the operator's arguments match given function
+tests.
+
+How to use this module
+----------------------
+
+>>> from propagator.generic_operator import make_generic_operator,assign_operation
+>>> concat = make_generic_operator(2, "concat", lambda x, y: x + y)
+>>> concat("hello ", "world")
+hello world
+>>> is_number = lambda x: isinstance(x, (int, float, complex))
+>>> concat_numbers = lambda x, y: str(x) + str(y)
+>>> assign_operation("concat", concat_numbers, (is_number, is_number))
+>>> concat(1, 2)
+12
+"""
 
 from propagator.logging import debug
 

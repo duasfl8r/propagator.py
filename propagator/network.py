@@ -158,10 +158,10 @@ merge = make_generic_operator(2, "merge", _default_merge)
 
 assign_operation("merge",
     lambda content, increment: content,
-    (partial(is_not, None), partial(is_, None))
+    [partial(is_not, None), partial(is_, None)]
 )
 
 assign_operation("merge",
     lambda content, increment: increment,
-    (partial(is_, None), partial(is_not, None))
+    [partial(is_, None), partial(is_not, None)]
 )

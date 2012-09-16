@@ -19,10 +19,7 @@ class Interval:
         return self.__str__()
 
     def __eq__(self, other):
-        if hasattr(other, "low") and hasattr(other, "high"):
-            return (self.low == other.low) and (self.high == other.high)
-        else:
-            return False
+        return isinstance(other, Interval) and (self.low == other.low) and (self.high == other.high)
 
     def __mul__(self, other):
         return Interval(self.low * other.low, self.high * other.high)
@@ -54,6 +51,12 @@ def _merge_intervals(content, increment):
     else:
         return new_range
 
+def _ensure_inside(interval, number):
+    if interval.contains(number):
+        return number
+    else:
+        return Contradiction + ['{number} is not inside {interval}'.format(**vars())]
+
 def is_number(thing):
     return isinstance(thing, (int, float, complex))
 
@@ -62,23 +65,17 @@ def is_interval(thing):
 
 assign_operation("merge",
     _merge_intervals,
-    (is_interval, is_interval)
+    [is_interval, is_interval]
 )
-
-def _ensure_inside(interval, number):
-    if interval.contains(number):
-        return number
-    else:
-        return Contradiction + ['{number} is not inside {interval}'.format(**vars())]
 
 assign_operation("merge",
     lambda content, increment: _ensure_inside(increment, content),
-    (is_number, is_interval)
+    [is_number, is_interval]
 )
 
 assign_operation("merge",
     lambda content, increment: _ensure_inside(content, increment),
-    (is_interval, is_number)
+    [is_interval, is_number]
 )
 
 

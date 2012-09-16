@@ -6,10 +6,12 @@ They generally take some input cells and return a `Propagator` object
 that calculates this relationship when the cells have enough content.
 """
 
-import operator
+from math import sqrt
+from operator import add, sub, mul, truediv, lt, gt, le, ge, not_
 
 from propagator import scheduler
 from propagator.network import Propagator, Cell
+from propagator.generic_operator import make_generic_operator, assign_operation
 from propagator.logging import debug, warn, error, info
 
 """
@@ -49,65 +51,73 @@ def make_primitive(f):
 """
 A factory of propagators that add inputs to an output.
 """
-adder = make_primitive(operator.add)
+adder = make_primitive(make_generic_operator(2, "add", add))
 
 """
 A factory of propagators that subtract inputs to an output.
 """
-subtractor = make_primitive(operator.sub)
+subtractor = make_primitive(make_generic_operator(2, "sub", sub))
 
 """
 A factory of propagators that multiply inputs to an output.
 """
-multiplier = make_primitive(operator.mul)
+multiplier = make_primitive(make_generic_operator(2, "mul", mul))
 
 """
 A factory of propagators that divide inputs to an output.
 
 Uses true division (as in `/`).
 """
-divider = make_primitive(operator.truediv)
+divider = make_primitive(make_generic_operator(2, "truediv", truediv))
 
 """
 A factory of propagators that make its output the square of
 its input.
 """
-squarer = make_primitive(lambda x: x*x)
+_square = lambda x: x*x
+squarer = make_primitive(make_generic_operator(1, "square", _square))
+
+
+"""
+A factory of propagators that make its output the square root of
+its input.
+"""
+sqrter = make_primitive(make_generic_operator(1,  "sqrt", sqrt))
 
 """
 A factory of propagators that make its output the absolute value of its input.
 """
-absolute_value = make_primitive(operator.abs)
+absolute_value = make_primitive(make_generic_operator(1, "abs", abs))
 
 """
 A factory of propagators that make its output `True` if its
 inputs `(a, b)` are so that `a < b`, and `False` otherwise.
 """
-less_than = make_primitive(operator.lt)
+less_than = make_primitive(make_generic_operator(2, "lt", lt))
 
 """
 A factory of propagators that make its output `True` if its
 inputs `(a, b)` are so that `a > b`, and `False` otherwise.
 """
-greater_than = make_primitive(operator.gt)
+greater_than = make_primitive(make_generic_operator(2, "gt", gt))
 
 """
 A factory of propagators that make its output `True` if its
 inputs `(a, b)` are so that `a <= b`, and `False` otherwise.
 """
-less_or_equal = make_primitive(operator.le)
+less_or_equal = make_primitive(make_generic_operator(2, "le", le))
 
 """
 A factory of propagators that make its output `True` if its
 inputs `(a, b)` are so that `a >= b`, and `False` otherwise.
 """
-greater_or_equal = make_primitive(operator.ge)
+greater_or_equal = make_primitive(make_generic_operator(2, "ge", ge))
 
 """
 A factory of propagators that make its output the negation of
 its input boolean interpretation.
 """
-inverter = make_primitive(operator.not_)
+inverter = make_primitive(make_generic_operator(1, "not", not_))
 
 """
 Returns a factory of propagators that always stores `value` on its

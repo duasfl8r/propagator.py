@@ -19,6 +19,7 @@ hello world
 12
 """
 
+from collections import deque
 from propagator.logging import debug
 
 generic_operators = {}
@@ -26,9 +27,9 @@ generic_operators = {}
 """
 Calls one of assigned operators according to the types of its arguments.
 """
-class GenericOperator:
+class _GenericOperator:
     """
-    Initialize a GenericOperator with a default operation and no
+    Initialize a `_GenericOperator` with a default operation and no
     assigned functions.
 
     Parameters:
@@ -87,10 +88,10 @@ Parameters:
 - default_function: the function that will be called if there are no
   assigned operators.
 
-Returns a `GenericOperator` object to be used as a callable operator.
+Returns a `_GenericOperator` object to be used as a callable operator.
 """
 def make_generic_operator(arity, name, default_function):
-    generic_operators[name] = GenericOperator(arity, default_function)
+    generic_operators[name] = _GenericOperator(arity, default_function)
     return generic_operators[name]
 
 

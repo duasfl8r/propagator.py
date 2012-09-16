@@ -1,7 +1,7 @@
 import unittest
 
 from propagator import scheduler
-from propagator.network import Cell, Propagator
+from propagator.network import Cell, Propagator, is_contradictory
 from propagator.primitives import *
 
 
@@ -31,9 +31,10 @@ class CellTestCase(TestCaseWithScheduler):
         a.add_content('hello')
         self.assertEqual(a.content, 'hello')
 
-    def test_add_new_content_to_filled_cell_raises(self):
+    def test_add_new_content_to_filled_cell_returns_contradiction(self):
         a = Cell(content='hello')
-        self.assertRaises(ValueError, a.add_content, 'world')
+        a.add_content('world')
+        self.assertTrue(is_contradictory(a.content))
 
     def test_add_same_content_to_filled_cell(self):
         a = Cell(content='hello')
@@ -74,4 +75,4 @@ class PropagatorTestCase(TestCaseWithScheduler):
             self.assertEqual(cell.neighbors, [f])
 
 if __name__ == '__main__':
-        unittest.main()
+    unittest.main()

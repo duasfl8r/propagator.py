@@ -1,8 +1,7 @@
-from functools import partial
+from math import sqrt
 
-from propagator import scheduler
 from propagator.generic_operator import assign_operation
-from propagator.network import Cell, Contradiction
+from propagator.network import Contradiction
 
 class Interval:
     def __init__(self, low, high):
@@ -78,4 +77,7 @@ assign_operation("merge",
     [is_interval, is_number]
 )
 
-
+assign_operation("sqrt",
+    lambda i: Interval(sqrt(i.low), sqrt(i.high)),
+    [is_interval]
+)

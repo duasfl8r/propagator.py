@@ -2,7 +2,6 @@ from propagator import scheduler
 from propagator.network import Propagator, Cell
 from propagator.primitives import *
 from propagator.interval import Interval
-from propagator.interval.primitives import *
 from propagator.logging import debug, warn, error, info
 
 """

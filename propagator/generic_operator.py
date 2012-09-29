@@ -38,7 +38,8 @@ class _GenericOperator:
     - default_function: the function that will be called if there are no
       assigned operators.
     """
-    def __init__(self, arity, default_function):
+    def __init__(self, name, arity, default_function):
+        self.name = name
         self.arity = arity
         self.default_function = default_function
         self.assigned_operations = deque()
@@ -91,7 +92,7 @@ Parameters:
 Returns a `_GenericOperator` object to be used as a callable operator.
 """
 def make_generic_operator(arity, name, default_function):
-    generic_operators[name] = _GenericOperator(arity, default_function)
+    generic_operators[name] = _GenericOperator(name, arity, default_function)
     return generic_operators[name]
 
 

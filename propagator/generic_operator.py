@@ -70,7 +70,14 @@ class _GenericOperator:
         op = self.operator_for(*args)
         return op(*args)
 
-        return self.default_function(*args)
+    def __str__(self):
+        return "_GenericOperator('{name}', {arity}, {default_function})".format(**vars(self))
+
+    def __unicode__(self):
+        return self.__str__
+
+    def __repl__(self):
+        return self.__str__
 
     """
     Assigns `function` to arguments whose elements match `tests`.

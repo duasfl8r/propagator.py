@@ -44,11 +44,7 @@ class _GenericOperator:
         self.default_function = default_function
         self.assigned_operations = deque()
 
-    """
-    Calls the first of the assigned operators (in decrescent order of
-    assignment time) whose tests match `args`.
-    """
-    def __call__(self, *args):
+    def operator_for(self, *args):
         def matches(things, tests):
             return all(test(thing) for thing, test in zip(things, tests))
 
@@ -62,6 +58,17 @@ class _GenericOperator:
             if matches(args, op["tests"]):
                 debug("    MATCH!")
                 return op["function"](*args)
+                return op["function"]
+
+        return self.default_function
+
+    """
+    Calls the first of the assigned operators (in decrescent order of
+    assignment time) whose tests match `args`.
+    """
+    def __call__(self, *args):
+        op = self.operator_for(*args)
+        return op(*args)
 
         return self.default_function(*args)
 

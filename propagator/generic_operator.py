@@ -48,15 +48,11 @@ class _GenericOperator:
         def matches(things, tests):
             return all(test(thing) for thing, test in zip(things, tests))
 
-        debug("Trying to match {args} for an operation...".format(**vars()))
-
         assert len(args) == self.arity, \
-            "Expected arity {0}, received {1}".format(self.arity, len(args))
+            "Expected arity {0}, received {1}\nArgs: {2}".format(self.arity, len(args), args)
 
         for op in self.assigned_operations:
-            debug("   Trying {op[tests]}...".format(**vars()))
             if matches(args, op["tests"]):
-                debug("    MATCH!")
                 return op["function"]
 
         return self.default_function

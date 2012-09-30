@@ -41,12 +41,13 @@ class Interval:
 
 def _merge_intervals(content, increment):
     new_range = content & increment
-    if new_range == content:
+
+    if new_range.is_empty():
+        return Contradiction + ['Empty merge: {content} & {increment} == {new_range}'.format(**vars())]
+    elif new_range == content:
         return content
     elif new_range == increment:
         return increment
-    elif new_range.is_empty():
-        return Contradiction + ['Empty merge: {content} & {increment} == {new_range}'.format(**vars())]
     else:
         return new_range
 

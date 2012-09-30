@@ -4,9 +4,9 @@ from propagator.generic_operator import assign_operation
 from propagator.network import Contradiction
 
 class Interval:
-    def __init__(self, low, high):
+    def __init__(self, low, high=None):
         self.low = low
-        self.high = high
+        self.high = high is None and low or high
 
     def __str__(self):
         return 'Interval({low}, {high})'.format(**vars(self))

@@ -57,7 +57,6 @@ class _GenericOperator:
             debug("   Trying {op[tests]}...".format(**vars()))
             if matches(args, op["tests"]):
                 debug("    MATCH!")
-                return op["function"](*args)
                 return op["function"]
 
         return self.default_function

@@ -35,7 +35,7 @@ class Interval:
     def is_empty(self):
         return self.low > self.high
 
-    def contains(number):
+    def contains(self, number):
         return self.high >= number >= self.low
 
 

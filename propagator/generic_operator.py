@@ -19,7 +19,7 @@ hello world
 12
 """
 
-from collections import deque
+from collections import deque, Iterable
 from propagator.logging import debug
 
 generic_operators = {}
@@ -117,6 +117,19 @@ arguments match `tests`.
 A generic operator called `name` must have already been created, and its
 arity must match the size of `tests`.
 
+If several tests use the same name and function, you can call
+`assign_operation` only once, with `tests` being a sequence of different
+tests that will call this function.
+
+So, instead of:
+
+>>> assign_operation("mul", my_function, [is_foo, is_bar])
+>>> assign_operation("mul", my_function, [is_bar, is_foo])
+
+You can do:
+
+>>> assign_operation("mul", my_function, ([is_foo, is_bar], [is_bar, is_foo]))
+
 Parameters:
 
 - name: the name of the generic operator
@@ -125,11 +138,19 @@ Parameters:
   arguments.
 """
 def assign_operation(name, function, tests):
+    def is_iter(thing):
+        return isinstance(thing, Iterable)
+
     assert name in generic_operators, "Operator '{name}' does not exist".format(**vars())
 
     gen_op = generic_operators[name]
 
-    assert len(tests) == gen_op.arity, \
-        "Operator '{0}' expected arity {0}, received {1}".format(name, gen_op.arity, len(tests))
+    assert is_iter(tests) and len(tests) > 0
 
-    gen_op.assign(function, tests)
+    my_tests_iter = is_iter(tests[0]) and tests or [tests]
+
+    for tests in my_tests_iter:
+        assert len(tests) == gen_op.arity, \
+            "Operator '{0}' expected arity {1}, received {1}".format(name, gen_op.arity, len(tests))
+
+        gen_op.assign(function, tests)

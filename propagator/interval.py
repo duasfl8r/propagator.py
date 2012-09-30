@@ -2,6 +2,7 @@ from math import sqrt
 
 from propagator.generic_operator import assign_operation
 from propagator.network import Contradiction
+from propagator.operator import mul, truediv
 
 class Interval:
     def __init__(self, low, high=None):
@@ -20,14 +21,6 @@ class Interval:
     def __eq__(self, other):
         return isinstance(other, Interval) and (self.low == other.low) and (self.high == other.high)
 
-    def __mul__(self, other):
-        return Interval(self.low * other.low, self.high * other.high)
-
-    def __truediv__(self, other):
-        return self * Interval(1.0 / other.high, 1.0 / other.low)
-
-    def __pow__(self, number):
-        return Interval(pow(self.low, number), pow(self.high, number))
 
     def __and__(self, other):
         return Interval(max(self.low, other.low), min(self.high, other.high))
@@ -81,4 +74,34 @@ assign_operation("merge",
 assign_operation("sqrt",
     lambda i: Interval(sqrt(i.low), sqrt(i.high)),
     [is_interval]
+)
+
+def coercing(coercer, f):
+    return lambda *args: f(*[coercer(a) for a in args])
+
+def to_interval(thing):
+    if isinstance(thing, Interval):
+        return thing
+    else:
+        return Interval(thing)
+
+
+assign_operation("mul",
+    lambda i1, i2: Interval(mul(i1.low, i2.low), mul(i1.high, i2.high)),
+    [is_interval, is_interval]
+)
+
+assign_operation("mul",
+    coercing(to_interval, mul),
+    ([is_interval, is_number], [is_number, is_interval])
+)
+
+assign_operation("truediv",
+    lambda i1, i2: mul(i1, Interval(truediv(1, i2.high), truediv(1, i2.low))),
+    [is_interval, is_interval]
+)
+
+assign_operation("truediv",
+    coercing(to_interval, truediv),
+    ([is_interval, is_number], [is_number, is_interval])
 )

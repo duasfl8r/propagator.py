@@ -52,14 +52,14 @@ class Cell:
         self.add_content(content)
         debug("New cell: " + str(self))
 
+    def __repr__(self):
+        return "Cell({name}, {content})".format(name=repr(self.name), content=repr(self.content))
+
     def __str__(self):
-        if self.name:
-            return "<Cell:  {name} [{content}] ({id})>".format(id=id(self), **vars(self))
-        else:
-            return "<Cell: [{content}] ({id})>".format(id=id(self), **vars(self))
+        return repr(self)
 
     def __unicode__(self):
-        return self.__str__()
+        return str(self)
 
     """
     Add a propagator to the cell's neighbors, and alert it using the scheduler.

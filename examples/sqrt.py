@@ -12,6 +12,7 @@ Each step in this process is called a "Heron step"; this step calculates a "bett
 from propagator import scheduler
 from propagator.network import Propagator, Cell
 from propagator.primitives import *
+from propagator.decorators import compound
 from propagator.logging import debug, warn, error, info
 
 """
@@ -29,6 +30,7 @@ Parameters:
 - `h`: a `Cell` object that will store a better guess
 """
 def heron_step(x, g, h):
+    @compound(neighbors=[x, g])
     def helper():
         x_over_g = Cell('x/g')
         g_plus_x_over_g = Cell('g+x/g')
@@ -38,7 +40,7 @@ def heron_step(x, g, h):
         adder(g, x_over_g, g_plus_x_over_g)
         (constant(2))(two)
         divider(g_plus_x_over_g, two, h)
-    return Propagator.compound([x, g], helper)
+    return helper
 
 """
 Creates a propagator network that calculates the square root of `x` and
@@ -51,11 +53,12 @@ Parameters:
   of `x`
 """
 def sqrt_network(x, answer):
+    @compound(neighbors=[x])
     def sqrt_network_helper():
         one = Cell('one')
         (constant(1))(one)
         sqrt_iter(x, one, answer)
-    return Propagator.compound([x], sqrt_network_helper)
+    return sqrt_network_helper
 
 """
 Creates a propagator network that calculates progressively better
@@ -70,6 +73,7 @@ Parameters:
   of `x`
 """
 def sqrt_iter(x, g, answer):
+    @compound(neighbors=[x, g])
     def sqrt_iter_helper():
         debug("sqrt_iter_helper: {x}, {g}, {answer}".format(**vars()))
         done = Cell('done')
@@ -93,7 +97,7 @@ def sqrt_iter(x, g, answer):
 
         sqrt_iter(x_if_not_done, new_g, answer)
 
-    return Propagator.compound([x, g], sqrt_iter_helper)
+    return sqrt_iter_helper
 
 """
 A `Cell` object containing a very small number.
@@ -115,7 +119,8 @@ Where `eps` is a `Cell` object containing a very small number, and is
 defined in this module.
 """
 def good_enuf(g, x, done):
-    def good_enuf_helper():
+    @compound(neighbors=[g, x])
+    def to_do():
         g_to_2 = Cell('g^2')
         x_minus_g_to_2 = Cell('x-g^2')
         ax_minus_g_to_2 = Cell('abs(x-g^2)')
@@ -125,7 +130,8 @@ def good_enuf(g, x, done):
         absolute_value(x_minus_g_to_2, ax_minus_g_to_2)
         less_than(ax_minus_g_to_2, eps, done)
 
-    return Propagator.compound([g, x], good_enuf_helper)
+    return to_do
+
 
 if __name__ == '__main__':
     scheduler.initialize()

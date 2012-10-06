@@ -2,6 +2,7 @@ from propagator import scheduler
 from propagator.network import Propagator, Cell
 from propagator.primitives import *
 from propagator.interval import Interval
+from propagator.decorators import compound
 from propagator.logging import debug, warn, error, info
 
 """
@@ -40,6 +41,7 @@ def quadratic(x, x_to_2):
 # composing multidirectional primitives.
 
 def fall_duration(t, h):
+    @compound(neighbors=[t])
     def fall_duration_helper():
         g = Cell('g')
         one_half = Cell('one half')
@@ -52,15 +54,16 @@ def fall_duration(t, h):
         product(g, t_to_2, g_times_t_to_2)
         product(one_half, g_times_t_to_2, h)
 
-    return Propagator.compound([t], fall_duration_helper)
+    return fall_duration_helper
 
 def similar_triangles(s_ba, h_ba, s, h):
+    @compound(neighbors=[s_ba, h_ba, s])
     def similar_triangles_helper():
         ratio = Cell('ratio')
         product(s_ba, ratio, h_ba)
         product(s, ratio, h)
 
-    return Propagator.compound([s_ba, h_ba, s], similar_triangles_helper)
+    return similar_triangles_helper
 
 
 if __name__ == '__main__':

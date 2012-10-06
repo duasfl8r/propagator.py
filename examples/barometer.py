@@ -2,6 +2,7 @@ from propagator import scheduler
 from propagator.network import Propagator, Cell
 from propagator.primitives import *
 from propagator.interval import Interval
+from propagator.decorators import compound
 from propagator.logging import debug, warn, error, info
 
 """
@@ -23,6 +24,7 @@ Propagator, "Partial Information".
 # network (that includes some uncertainty about the local g):
 
 def fall_duration(t, h):
+    @compound(neighbors=[t])
     def fall_duration_helper():
         g = Cell('g')
         one_half = Cell('one half')
@@ -35,7 +37,7 @@ def fall_duration(t, h):
         multiplier(g, t_to_2, g_times_t_to_2)
         multiplier(one_half, g_times_t_to_2, h)
 
-    return Propagator.compound([t], fall_duration_helper)
+    return fall_duration_helper
 
 # Trying it out, we get an estimate for the height of the building:
 
@@ -69,12 +71,13 @@ print(building_height.content)
 # The network for this is:
 
 def similar_triangles(s_ba, h_ba, s, h):
+    @compound(neighbors=[s_ba, h_ba, s])
     def similar_triangles_helper():
         ratio = Cell('ratio')
         divider(h_ba, s_ba, ratio)
         multiplier(s, ratio, h)
 
-    return Propagator.compound([s_ba, h_ba, s], similar_triangles_helper)
+    return similar_triangles_helper
 
 
 

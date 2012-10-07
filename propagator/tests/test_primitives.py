@@ -1,8 +1,9 @@
 import unittest
 
 from propagator import scheduler
-from propagator import Cell, Propagator
-from propagator.primitives import *
+from propagator import Cell
+from propagator.primitives import adder, subtractor, multiplier, divider, \
+        absolute_value, less_than, greater_than, inverter, constant, switch
 
 class TestCaseWithScheduler(unittest.TestCase):
     def setUp(self):

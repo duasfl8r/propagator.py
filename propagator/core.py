@@ -12,12 +12,9 @@ This module uses `propagator.scheduler`, a `Scheduler` object
 that manages the propagator alerts.
 """
 
-from contextlib import contextmanager
-
-from propagator.generic_operator import make_generic_operator, assign_operation
-from propagator.merging import merge, is_contradictory
+from propagator.merging import merge
 from propagator.util import SetQueue, listify, all_none
-from propagator.logging import debug, warn, error, info
+from propagator.logging import debug
 
 
 """
@@ -139,7 +136,8 @@ class Cell:
             scheduler.alert_propagators(self.neighbors)
 
 """
-The machine of the propagator network.  
+The machine of the propagator network.
+
 A `Propagator` is a machine that continously examines its input cells and
 produces outputs when possible (i.e. when the inputs have enough information).
 """

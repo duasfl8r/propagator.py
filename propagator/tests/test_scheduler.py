@@ -1,8 +1,6 @@
 import unittest
 
 from propagator import scheduler
-from propagator import Cell, Propagator
-from propagator.primitives import *
 
 class TestCaseWithScheduler(unittest.TestCase):
     def setUp(self):

@@ -1,11 +1,9 @@
 import operator
 from functools import reduce
 
-from propagator import Cell
 from propagator.merging import merge, is_contradictory
-from propagator.primitives import *
-from propagator.generic_operator import assign_operation, generic_operators
-from propagator.logging import debug, warn, error, info
+from propagator.generic_operator import assign_operation
+from propagator.logging import debug
 import propagator.operator
 
 class Support(set):
@@ -130,9 +128,7 @@ for op_name, op_function in operator_functions.items():
         [is_flat, is_supported]
     )
 
-sqrt = generic_operators["sqrt"]
-assign_operation("sqrt", supported_unpacking(sqrt), [is_supported]) 
-
+assign_operation("sqrt", supported_unpacking(propagator.operator.sqrt), [is_supported]) 
 
 assign_operation("is_contradictory",
     lambda s: is_contradictory(s.value),

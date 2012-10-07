@@ -2,7 +2,7 @@
 import math
 import operator
 
-from propagator.generic_operator import make_generic_operator, assign_operation, generic_operators
+from propagator.generic_operator import make_generic_operator
 
 add = make_generic_operator(2, "add", operator.add)
 

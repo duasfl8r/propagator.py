@@ -2,7 +2,7 @@ from functools import partial
 from operator import is_, is_not
 
 from propagator.generic_operator import make_generic_operator, assign_operation
-from propagator.logging import debug, warn, error, info
+from propagator.logging import debug
 
 class Contradiction:
     def __init__(self, message=None):

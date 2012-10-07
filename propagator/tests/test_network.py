@@ -3,7 +3,6 @@ import unittest
 from propagator import scheduler
 from propagator import Cell, Propagator
 from propagator.merging import is_contradictory
-from propagator.primitives import *
 
 
 class TestCaseWithScheduler(unittest.TestCase):
@@ -70,7 +69,7 @@ class PropagatorTestCase(TestCaseWithScheduler):
         c = Cell()
         f = lambda x: x
 
-        p = Propagator([a, b, c], f)
+        Propagator([a, b, c], f)
 
         for cell in [a, b, c]:
             self.assertEqual(cell.neighbors, [f])

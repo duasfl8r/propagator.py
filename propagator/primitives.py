@@ -6,12 +6,10 @@ They generally take some input cells and return a `Propagator` object
 that calculates this relationship when the cells have enough content.
 """
 
-import math
-
-from propagator import scheduler
 from propagator import Propagator, Cell
-from propagator.logging import debug, warn, error, info
-from propagator.operator import add, sub, mul, truediv, lt, gt, le, ge, not_, sqrt, abs, square
+from propagator.logging import debug
+from propagator.operator import add, sub, mul, truediv, lt, gt, le, ge, not_, \
+        sqrt, abs, square
 
 """
 Takes a function `f` and returns a function wrapper that applies `f`

@@ -1,7 +1,7 @@
 from math import sqrt
 
 from propagator.generic_operator import assign_operation
-from propagator.network import Contradiction
+from propagator.merging import Contradiction
 from propagator.operator import mul, truediv
 
 class Interval:
@@ -36,7 +36,7 @@ def _merge_intervals(content, increment):
     new_range = content & increment
 
     if new_range.is_empty():
-        return Contradiction + ['Empty merge: {content} & {increment} == {new_range}'.format(**vars())]
+        return Contradiction('Empty merge: {content} & {increment} == {new_range}'.format(**vars()))
     elif new_range == content:
         return content
     elif new_range == increment:
@@ -48,7 +48,7 @@ def _ensure_inside(interval, number):
     if interval.contains(number):
         return number
     else:
-        return Contradiction + ['{number} is not inside {interval}'.format(**vars())]
+        return Contradiction('{number} is not inside {interval}'.format(**vars()))
 
 def is_number(thing):
     return isinstance(thing, (int, float, complex))

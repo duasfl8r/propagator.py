@@ -1,2 +1,0 @@
-class ContradictionError(ValueError):
-    pass

@@ -15,15 +15,10 @@ from functools import partial
 from operator import is_, is_not
 
 from propagator import scheduler
-from propagator import make_generic_operator, assign_operation
+from propagator.generic_operator import make_generic_operator, assign_operation
+from propagator.merging import merge, is_contradictory
 from propagator.util import all_none
 from propagator.logging import debug, warn, error, info
-from propagator.exceptions import ContradictionError
-
-Contradiction = ['contradiction']
-
-def is_contradictory(x):
-    return type(x) == list and len(x) and x[0] == 'contradiction'
 
 """
 The storage unit of the propagator network.
@@ -145,23 +140,3 @@ class Propagator:
                     to_build()
 
         return Propagator(neighbors, compound_helper)
-
-
-def _default_merge(content, increment):
-    debug("Merging {content} and {increment}...".format(**vars()))
-    if content == increment:
-        return content
-    else:
-        return Contradiction + ['{content} != {increment}'.format(**vars())]
-
-merge = make_generic_operator(2, "merge", _default_merge)
-
-assign_operation("merge",
-    lambda content, increment: content,
-    [partial(is_not, None), partial(is_, None)]
-)
-
-assign_operation("merge",
-    lambda content, increment: increment,
-    [partial(is_, None), partial(is_not, None)]
-)

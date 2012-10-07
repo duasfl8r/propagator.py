@@ -10,7 +10,7 @@ Each step in this process is called a "Heron step"; this step calculates a "bett
 """
 
 from propagator import scheduler
-from propagator.network import Propagator, Cell
+from propagator import Propagator, Cell
 from propagator.primitives import *
 from propagator.decorators import compound
 from propagator.logging import debug, warn, error, info

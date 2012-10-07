@@ -1,7 +1,7 @@
 import unittest
 
 from propagator import scheduler
-from propagator.network import Cell, Propagator
+from propagator import Cell, Propagator
 from propagator.merging import merge
 from propagator.primitives import *
 from propagator.content.supported import Support, Supported

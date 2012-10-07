@@ -1,7 +1,7 @@
 import operator
 from functools import reduce
 
-from propagator.network import Cell
+from propagator import Cell
 from propagator.merging import merge, is_contradictory
 from propagator.primitives import *
 from propagator.generic_operator import assign_operation, generic_operators

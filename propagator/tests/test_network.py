@@ -1,7 +1,8 @@
 import unittest
 
 from propagator import scheduler
-from propagator.network import Cell, Propagator, is_contradictory
+from propagator import Cell, Propagator
+from propagator.merging import is_contradictory
 from propagator.primitives import *
 
 

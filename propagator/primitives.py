@@ -9,7 +9,7 @@ that calculates this relationship when the cells have enough content.
 import math
 
 from propagator import scheduler
-from propagator.network import Propagator, Cell
+from propagator import Propagator, Cell
 from propagator.logging import debug, warn, error, info
 from propagator.operator import add, sub, mul, truediv, lt, gt, le, ge, not_, sqrt, abs, square
 

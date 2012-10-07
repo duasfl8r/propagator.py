@@ -6,16 +6,69 @@ Classes defined in this module:
 
 - `Cell`
 - `Propagator`
+- `Scheduler`
 
 This module uses `propagator.scheduler`, a `Scheduler` object
 that manages the propagator alerts.
 """
 
-from propagator import scheduler
+from contextlib import contextmanager
+
 from propagator.generic_operator import make_generic_operator, assign_operation
 from propagator.merging import merge, is_contradictory
-from propagator.util import all_none
+from propagator.util import SetQueue, listify, all_none
 from propagator.logging import debug, warn, error, info
+
+
+"""
+A scheduler that stores propagators in a queue ("alerts" them) and runs
+them until there are no propagators left.
+
+Each propagator, when ran, may alert other propagators, so this process
+will continue until the propagator network stabilizes.
+
+"""
+class Scheduler:
+    def __init__(self):
+        self.alerted_propagators = SetQueue()
+        self.propagators_ever_alerted = SetQueue()
+
+    """
+    Initialize the scheduler, emptying its queues and registers.
+    """
+    def initialize(self):
+        debug("Initializing scheduler")
+        self.alerted_propagators.clear()
+        self.propagators_ever_alerted.clear()
+
+
+    """
+    Alerts all propagators in `propagators`.
+
+    Parameters:
+
+    - `propagators`: a single `Propagator` object or a list of
+      `Propagators objects.
+    """
+    def alert_propagators(self, propagators):
+        for p in listify(propagators):
+            assert callable(p), "Alerting a non-procedure"
+            self.propagators_ever_alerted.add(p)
+            self.alerted_propagators.add(p)
+
+    """
+    Pops and runs alerted propagators from the queue them until it is
+    empty.
+    """
+    def run(self):
+        debug("Running scheduler")
+        while len(self.alerted_propagators):
+            propagator = self.alerted_propagators.pop()
+            propagator()
+        debug("Scheduler done")
+
+scheduler = Scheduler()
+
 
 """
 The storage unit of the propagator network.

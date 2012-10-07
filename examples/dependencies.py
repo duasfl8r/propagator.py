@@ -1,5 +1,5 @@
 from propagator import scheduler
-from propagator.network import Propagator, Cell
+from propagator import Propagator, Cell
 from propagator.primitives import *
 from propagator.content.interval import Interval
 from propagator.content.supported import Supported

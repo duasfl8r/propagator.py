@@ -1,4 +1,4 @@
-from propagator.network import Propagator
+from propagator import Propagator
 
 def compound(*, neighbors):
     def compound_(to_build):

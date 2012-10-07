@@ -45,14 +45,14 @@ class Supported():
                 self.support == other.support
 
 
-def _implies(v1, v2):
-    return v1 == merge(v1, v2)
-
 def _merge_supporteds(content, increment):
+    def implies(v1, v2):
+        return v1 == merge(v1, v2)
+
     merged_value = merge(content.value, increment.value)
 
     if merged_value == content.value:
-        if _implies(increment.value, merged_value):
+        if implies(increment.value, merged_value):
             # Confirmation of existing information
             if increment.support.more_informative_than(content.support):
                 return increment
@@ -89,12 +89,12 @@ assign_operation("merge",
     [is_flat, is_supported]
 )
 
-def merge_supports(*supporteds):
-    supports = [supported.support for supported in supporteds]
-    merged_sets = reduce(operator.or_, supports, set())
-    return Support(merged_sets)
-
 def supported_unpacking(function):
+    def merge_supports(*supporteds):
+        supports = [supported.support for supported in supporteds]
+        merged_sets = reduce(operator.or_, supports, set())
+        return Support(merged_sets)
+
     return lambda *args: Supported( \
         function(*[arg.value for arg in args]),
         merge_supports(*args)

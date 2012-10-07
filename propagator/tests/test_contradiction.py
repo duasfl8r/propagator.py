@@ -1,8 +1,8 @@
 import unittest
 
 from propagator.merging import merge, Contradiction, is_contradictory
-from propagator.interval import Interval
-from propagator.supported import Supported
+from propagator.content.interval import Interval
+from propagator.content.supported import Supported
 
 class ContradictionTestCase(unittest.TestCase):
     def test_if_contradiction_is_contradictory(self):

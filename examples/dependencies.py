@@ -1,8 +1,8 @@
 from propagator import scheduler
 from propagator.network import Propagator, Cell
 from propagator.primitives import *
-from propagator.interval import Interval
-from propagator.supported import Supported
+from propagator.content.interval import Interval
+from propagator.content.supported import Supported
 from propagator.decorators import compound
 from propagator.logging import debug, warn, error, info
 
@@ -12,7 +12,7 @@ building from measurements made using a barometer, a stopwatch and a
 ruler. Each subsequent measurement enhances the accuracy of the answer,
 and also propagates back and enhances the other initial measurements.
 
-It uses the `propagator.supported.Supported` class as content for the
+It uses the `propagator.content.supported.Supported` class as content for the
 `Cell` objects. The cells then can track the provenance of its data,
 based on the supports given when new content is added or merged into
 them.

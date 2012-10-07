@@ -4,7 +4,7 @@ from propagator import scheduler
 from propagator.network import Cell, Propagator
 from propagator.merging import merge
 from propagator.primitives import *
-from propagator.supported import Support, Supported
+from propagator.content.supported import Support, Supported
 
 class TestCaseWithScheduler(unittest.TestCase):
     def setUp(self):

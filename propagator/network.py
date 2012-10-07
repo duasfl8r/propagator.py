@@ -11,9 +11,6 @@ This module uses `propagator.scheduler`, a `Scheduler` object
 that manages the propagator alerts.
 """
 
-from functools import partial
-from operator import is_, is_not
-
 from propagator import scheduler
 from propagator.generic_operator import make_generic_operator, assign_operation
 from propagator.merging import merge, is_contradictory

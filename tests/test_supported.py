@@ -3,6 +3,7 @@ import unittest
 from propagator import scheduler
 from propagator import Cell
 from propagator.primitives import adder, multiplier
+from propagator.content.interval import Interval
 from propagator.content.supported import Support, Supported
 
 class TestCaseWithScheduler(unittest.TestCase):
@@ -32,3 +33,11 @@ class SupportedTestCase(TestCaseWithScheduler):
         multiplier(c1, c2, c3)
         scheduler.run()
         self.assertEqual(c3.content, Supported(12))
+
+    def test_multiplier_interval(self):
+        c1 = Cell(content=Supported(Interval(3, 4)))
+        c2 = Cell(content=Supported(Interval(5, 6)))
+        c3 = Cell()
+        multiplier(c1, c2, c3)
+        scheduler.run()
+        self.assertEqual(c3.content, Supported(Interval(15, 24)))

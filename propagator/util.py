@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, Iterable
 
 """
 Returns `True` if all elements on `iterable` are `None`, and `False`
@@ -11,11 +11,16 @@ def all_none(iterable):
     return True
 
 """
-Returns `value` it it is a list, or a list containing it otherwise.
+Force `value` to be a list.
+
+Returns `value` casted a `list` it it is iterable, an empty list if it is
+`None`, or a one-element list containing `value` otherwise.
 """
 def listify(value):
-    if isinstance(value, list):
-        return value
+    if isinstance(value, Iterable) and not isinstance(value, str):
+        return list(value)
+    elif value is None:
+        return []
     else:
         return [value]
 

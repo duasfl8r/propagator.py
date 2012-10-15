@@ -21,8 +21,8 @@ class Contradiction:
         return repr(self)
 
 is_contradictory = make_generic_operator(1, "is_contradictory", lambda x: isinstance(x, Contradiction))
-is_none = partial(is_, None)
-is_not_none = partial(is_not, None)
+is_nothing = make_generic_operator(1, "is_nothing", partial(is_, None))
+is_not_nothing = partial(is_not, None)
 is_anything = lambda x: True
 
 def _default_merge(content, increment):
@@ -40,19 +40,18 @@ def implies(v1, v2):
 
 assign_operation("merge",
     lambda content, increment: content,
-    [is_not_none, is_none]
+    [is_not_nothing, is_nothing]
 )
 
 assign_operation("merge",
     lambda content, increment: increment,
-    [is_none, is_not_none]
+    [is_nothing, is_not_nothing]
 )
 
 assign_operation("merge",
     lambda contradiction, _: contradiction,
     [is_contradictory, is_anything]
 )
-
 assign_operation("merge",
     lambda _, contradiction: contradiction,
     [is_anything, is_contradictory]

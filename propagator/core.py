@@ -53,6 +53,9 @@ class Scheduler:
             self.propagators_ever_alerted.add(p)
             self.alerted_propagators.add(p)
 
+    def alert_all_propagators(self):
+        self.alert_propagators(self.propagators_ever_alerted)
+
     """
     Pops and runs alerted propagators from the queue them until it is
     empty.

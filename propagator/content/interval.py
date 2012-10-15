@@ -21,6 +21,8 @@ class Interval:
     def __eq__(self, other):
         return isinstance(other, Interval) and (self.low == other.low) and (self.high == other.high)
 
+    def __hash__(self):
+        return hash(repr(self))
 
     def __and__(self, other):
         return Interval(max(self.low, other.low), min(self.high, other.high))

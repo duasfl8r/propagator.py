@@ -42,6 +42,8 @@ class Supported():
                 self.value == other.value and \
                 self.support == other.support
 
+    def __hash__(self):
+        return hash(repr(self))
 
 def _merge_supporteds(content, increment):
     def implies(v1, v2):

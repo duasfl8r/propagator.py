@@ -1,2 +1,3 @@
 propagator.log
 __pycache__
+*.pyc

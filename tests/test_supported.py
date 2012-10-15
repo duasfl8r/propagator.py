@@ -41,3 +41,33 @@ class SupportedTestCase(TestCaseWithScheduler):
         multiplier(c1, c2, c3)
         scheduler.run()
         self.assertEqual(c3.content, Supported(Interval(15, 24)))
+
+    def test_supported_subsumes_one_with_same_value_and_looser_supports(self):
+        sup1 = Supported(Interval(5, 10), {'this'})
+        sup2 = Supported(Interval(5, 10), {'this', 'that'})
+        self.assertTrue(sup1.subsumes(sup2))
+
+    def test_supported_subsumes_one_with_looser_value_and_same_supports(self):
+        sup1 = Supported(Interval(6, 9), {'this', 'that'})
+        sup2 = Supported(Interval(5, 10), {'this', 'that'})
+        self.assertTrue(sup1.subsumes(sup2))
+
+    def test_supported_subsumes_one_with_looser_value_and_looser_supports(self):
+        sup1 = Supported(Interval(6, 9), {'this'})
+        sup2 = Supported(Interval(5, 10), {'this', 'that'})
+        self.assertTrue(sup1.subsumes(sup2))
+
+    def test_supported_doesnt_subsume_one_with_same_value_and_tighter_supports(self):
+        sup1 = Supported(Interval(5, 10), {'this', 'that'})
+        sup2 = Supported(Interval(5, 10), {'this'})
+        self.assertFalse(sup1.subsumes(sup2))
+
+    def test_supported_doesnt_subsume_one_with_tighter_value_and_same_supports(self):
+        sup1 = Supported(Interval(5, 10), {'this', 'that'})
+        sup2 = Supported(Interval(6, 9), {'this', 'that'})
+        self.assertFalse(sup1.subsumes(sup2))
+
+    def test_supported_doesnt_subsume_one_with_tighter_value_and_tighter_supports(self):
+        sup1 = Supported(Interval(5, 10), {'this', 'that'})
+        sup2 = Supported(Interval(6, 9), {'this'})
+        self.assertFalse(sup1.subsumes(sup2))

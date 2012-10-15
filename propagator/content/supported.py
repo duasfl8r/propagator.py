@@ -1,7 +1,7 @@
 import operator
 from functools import reduce
 
-from propagator.merging import merge, is_contradictory
+from propagator.merging import merge, implies, is_contradictory
 from propagator.generic_operator import assign_operation
 from propagator.logging import debug
 import propagator.operator
@@ -45,10 +45,12 @@ class Supported():
     def __hash__(self):
         return hash(repr(self))
 
-def _merge_supporteds(content, increment):
-    def implies(v1, v2):
-        return v1 == merge(v1, v2)
+    def subsumes(self, other):
+        assert is_supported(other)
+        return implies(self.value, other.value) and self.support.issubset(other.support)
 
+
+def _merge_supporteds(content, increment):
     merged_value = merge(content.value, increment.value)
 
     if merged_value == content.value:

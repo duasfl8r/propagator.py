@@ -34,6 +34,10 @@ def _default_merge(content, increment):
 
 merge = make_generic_operator(2, "merge", _default_merge)
 
+def implies(v1, v2):
+    return v1 == merge(v1, v2)
+
+
 assign_operation("merge",
     lambda content, increment: content,
     [is_not_none, is_none]

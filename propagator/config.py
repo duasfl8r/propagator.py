@@ -12,6 +12,7 @@ LOGGING = {
                 "class": "logging.StreamHandler",
                 "level": "INFO",
                 "formatter": "short",
+                "stream": "ext://sys.stdout"
                 }
             },
     "loggers": {

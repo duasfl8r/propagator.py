@@ -12,10 +12,11 @@ This module uses `propagator.scheduler`, a `Scheduler` object
 that manages the propagator alerts.
 """
 
-from propagator.merging import merge
-from propagator.util import SetQueue, listify, all_none
-from propagator.logging import debug
+from collections import deque
 
+from propagator.merging import merge
+from propagator.util import SetQueue, listify, all_none, callcc
+from propagator.logging import debug, error
 
 """
 A scheduler that stores propagators in a queue ("alerts" them) and runs
@@ -29,6 +30,8 @@ class Scheduler:
     def __init__(self):
         self.alerted_propagators = SetQueue()
         self.propagators_ever_alerted = SetQueue()
+        self._abort_process_stack = deque()
+        self.last_value_of_run = None
 
     """
     Initialize the scheduler, emptying its queues and registers.
@@ -37,6 +40,8 @@ class Scheduler:
         debug("Initializing scheduler")
         self.alerted_propagators.clear()
         self.propagators_ever_alerted.clear()
+        self._abort_process_stack.clear()
+        self.last_value_of_run = None
 
 
     """
@@ -56,16 +61,45 @@ class Scheduler:
     def alert_all_propagators(self):
         self.alert_propagators(self.propagators_ever_alerted)
 
+    def abort_process(self, value):
+        self.alerted_propagators.clear()
+        #error("Aborting: {value}".format(**vars()))
+        if self._abort_process_stack:
+            self._abort_process_stack.pop()(value)
+        else:
+            self.last_value_of_run = value
+
     """
     Pops and runs alerted propagators from the queue them until it is
     empty.
     """
     def run(self):
+        def with_process_abortion(thunk):
+            def f(k):
+                self._abort_process_stack.append(k)
+                thunk()
+                self._abort_process_stack.pop()
+
+            return callcc(f)
+
+        def run_alerted():
+            temp = list(self.alerted_propagators)
+            self.alerted_propagators.clear()
+            for propagator in list(temp):
+                debug("Running {propagator}".format(**vars()))
+                propagator()
+
+            if self.alerted_propagators:
+                run_alerted()
+
         debug("Running scheduler")
-        while len(self.alerted_propagators):
-            propagator = self.alerted_propagators.pop()
-            propagator()
+
+        if len(self.alerted_propagators):
+            self.last_value_of_run = with_process_abortion(run_alerted)
+
         debug("Scheduler done")
+
+        return self.last_value_of_run
 
 scheduler = Scheduler()
 

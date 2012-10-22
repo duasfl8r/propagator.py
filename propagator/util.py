@@ -1,4 +1,6 @@
 from collections import deque, Iterable
+import greenlet
+
 
 """
 Returns `True` if all elements on `iterable` are `None`, and `False`
@@ -23,6 +25,37 @@ def listify(value):
         return []
     else:
         return [value]
+
+
+"""
+Call a function with the current continuation.
+
+callcc (which should actually be call/cc or call-with-current-continuation)
+is a function which accepts a function which calls a callback and returns
+the thing which that function calls the callback with. Pretty much.
+
+Source: http://sigusr2.net/2011/Aug/09/call-cc-for-python.html
+"""
+class ContinuationError(Exception):
+    pass
+
+def callcc(f):
+    saved = [greenlet.getcurrent()]
+
+    def cont(val):
+        if saved[0] == None:
+            raise ContinuationError("one shot continuation called twice")
+        else:
+            return saved[0].switch(val)
+
+    def new_cr():
+        v = f(cont)
+        return cont(v)
+
+    value_cr = greenlet.greenlet(new_cr)
+    value = value_cr.switch()
+    saved[0] = None
+    return value
 
 """
 Build a queue of unique elements.

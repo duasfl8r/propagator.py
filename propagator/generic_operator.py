@@ -84,7 +84,7 @@ class _GenericOperator:
       arguments.
     """
     def assign(self, function, tests):
-        self.assigned_operations.appendleft({
+        self.assigned_operations.append({
             "function": function,
             "tests": tests
         })

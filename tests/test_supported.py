@@ -5,6 +5,7 @@ from propagator import Cell
 from propagator.primitives import adder, multiplier
 from propagator.content.interval import Interval
 from propagator.content.supported import Support, Supported
+from propagator.merging import merge, is_contradictory, Contradiction
 
 class TestCaseWithScheduler(unittest.TestCase):
     def setUp(self):
@@ -71,3 +72,86 @@ class SupportedTestCase(TestCaseWithScheduler):
         sup1 = Supported(Interval(5, 10), {'this', 'that'})
         sup2 = Supported(Interval(6, 9), {'this'})
         self.assertFalse(sup1.subsumes(sup2))
+
+class SupportedMergeTestCase(TestCaseWithScheduler):
+    def test_merge_none_and_supported_interval(self):
+        nil = None
+        sup = Supported(Interval(15, 16), {'this', 'that'})
+
+        self.assertEqual(
+            merge(nil, sup),
+            merge(sup, nil),
+        )
+
+        self.assertEqual(
+            merge(sup, nil),
+            Supported(Interval(15, 16), {'this', 'that'})
+        )
+
+    def test_merge_supported_none_and_supported_interval(self):
+        nil = Supported(None, {})
+        sup = Supported(Interval(15, 16), {'this', 'that'})
+
+        self.assertEqual(
+            merge(nil, sup),
+            merge(sup, nil),
+        )
+
+        self.assertEqual(
+            merge(sup, nil),
+            Supported(Interval(15, 16), {'this', 'that'})
+        )
+
+    def test_merge_two_supporteds_nones(self):
+        nil1 = Supported(None, {})
+        nil2 = Supported(None, {})
+
+        self.assertEqual(
+            merge(nil1, nil2),
+            Supported(None, {})
+        )
+
+    def test_merge_flat_interval_and_tighter_supported_interval(self):
+        number = Interval(14.5, 16.7)
+        sup = Supported(Interval(15, 16), {'this', 'that'})
+
+        self.assertEqual(
+            merge(number, sup),
+            merge(sup, number),
+        )
+
+        self.assertEqual(
+            merge(number, sup),
+            Supported(Interval(15, 16), {'this', 'that'})
+        )
+
+    def test_merge_flat_interval_and_looser_supported_interval(self):
+        number = Interval(14.5, 16.7)
+        sup = Supported(Interval(3, 18), {'this', 'that'})
+
+        self.assertEqual(
+            merge(number, sup),
+            merge(sup, number),
+        )
+
+        self.assertEqual(
+            merge(number, sup),
+            Supported(Interval(14.5, 16.7), {})
+        )
+
+    def test_merge_contradictory_supported_values(self):
+        sup1 = Supported(Interval(3, 6), {})
+        sup2 = Supported(Interval(7, 9), {})
+        merged = merge(sup1, sup2)
+
+        self.assertTrue(is_contradictory(merged))
+
+class ContradictoryTestCase(TestCaseWithScheduler):
+    def test_supported_contradiction_is_contradictory(self):
+        sup = Supported(Contradiction('...'), {})
+        self.assertTrue(is_contradictory(sup))
+
+    def test_supported_interval_is_not_contradictory(self):
+        sup = Supported(Interval(14, 15), {})
+        self.assertFalse(is_contradictory(sup))
+

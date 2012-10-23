@@ -22,3 +22,15 @@ My intentions translating it to Python are:
 
 [art]: http://dspace.mit.edu/handle/1721.1/4421
 [we-really-dont-know]: http://www.infoq.com/presentations/We-Really-Dont-Know-How-To-Compute
+
+
+## Translation notes
+
+### Overlap anomaly
+
+In the section "6.1 Dependencies for Provenance", the system as it is coded
+has a problem called "the overlap anomaly", in which a premise is included
+in the justifications of a conclusion even though it is not really needed.
+
+This anomaly does not occur in my translated examples, and I really don't
+know why.

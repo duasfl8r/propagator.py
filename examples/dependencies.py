@@ -131,5 +131,7 @@ if __name__ == '__main__':
     print(building_shadow.content)
     #Supported(Interval(54.9, 55.1), {'shadows'})
 
+    # [Translator note] This result is different from the paper. See the
+    # Translation notes in the README.
     print(fall_time.content)
     #Supported(Interval(3.025522031629098, 3.0321598338046556), {'superintendent'})

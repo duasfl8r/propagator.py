@@ -12,7 +12,7 @@ class Contradiction:
         if self.message is None:
             return "Contradiction()"
         else:
-            return "Contradiction({message})".format(**vars(self))
+            return "Contradiction('{message}')".format(**vars(self))
 
     def __str__(self):
         return repr(self)

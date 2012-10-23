@@ -4,6 +4,7 @@ from functools import reduce
 from propagator.merging import merge, implies, is_contradictory
 from propagator.generic_operator import assign_operation
 from propagator.logging import debug
+from propagator.content.interval import Interval
 import propagator.operator
 
 class Support(set):
@@ -71,7 +72,7 @@ def _merge_supporteds(content, increment):
         return Supported(merged_value, content.support | increment.support)
 
 def is_flat(thing):
-    return not is_supported(thing)
+    return isinstance(thing, (int, float, complex, Interval))
 
 def is_supported(thing):
     return isinstance(thing, Supported)

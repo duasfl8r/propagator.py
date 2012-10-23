@@ -1,5 +1,5 @@
 from functools import partial
-from operator import is_, is_not
+from operator import is_
 
 from propagator.generic_operator import make_generic_operator, assign_operation
 from propagator.logging import debug
@@ -22,7 +22,7 @@ class Contradiction:
 
 is_contradictory = make_generic_operator(1, "is_contradictory", lambda x: isinstance(x, Contradiction))
 is_nothing = make_generic_operator(1, "is_nothing", partial(is_, None))
-is_not_nothing = partial(is_not, None)
+is_not_nothing = make_generic_operator(1, "is_not_nothing", lambda x: not is_nothing(x))
 is_anything = lambda x: True
 
 def _default_merge(content, increment):

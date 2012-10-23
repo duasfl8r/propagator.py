@@ -77,6 +77,11 @@ def is_flat(thing):
 def is_supported(thing):
     return isinstance(thing, Supported)
 
+assign_operation("is_nothing",
+    lambda t: t.value is None,
+    [is_supported]
+)
+
 assign_operation("merge",
     _merge_supporteds,
     [is_supported, is_supported]
